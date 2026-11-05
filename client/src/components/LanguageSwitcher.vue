@@ -1,7 +1,11 @@
 <template>
-  <div class="language-switcher">
+  <div class="language-switcher" :class="{ collapsed }">
     <button
       class="language-button"
+      :aria-label="collapsed ? localeName : undefined"
+      :title="collapsed ? localeName : undefined"
+      aria-haspopup="menu"
+      :aria-expanded="isDropdownOpen ? 'true' : 'false'"
       @click="toggleDropdown"
       @blur="handleBlur"
     >
@@ -60,6 +64,11 @@ import { useI18n } from '../composables/useI18n'
 
 const { currentLocale, setLocale, availableLocales, localeName } = useI18n()
 
+// Rail mode: globe icon only, dropdown opens beside the sidebar
+defineProps({
+  collapsed: { type: Boolean, default: false }
+})
+
 const isDropdownOpen = ref(false)
 
 const languageNames = {
@@ -94,6 +103,7 @@ const selectLanguage = (locale) => {
 }
 
 .language-button {
+  width: 100%;
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -113,12 +123,30 @@ const selectLanguage = (locale) => {
   border-color: #cbd5e1;
 }
 
+/* Rail mode: icon-only trigger (name stays available via aria-label/title) */
+.collapsed .language-button {
+  width: auto;
+  padding: 0.5rem;
+}
+
+.collapsed .language-label,
+.collapsed .chevron {
+  display: none;
+}
+
+.language-button:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
 .globe-icon {
   color: #64748b;
   flex-shrink: 0;
 }
 
 .language-label {
+  flex: 1;
+  text-align: left;
   font-weight: 500;
 }
 
@@ -134,15 +162,25 @@ const selectLanguage = (locale) => {
 
 .dropdown-menu {
   position: absolute;
-  top: calc(100% + 0.5rem);
+  /* Lives in the sidebar footer: open upward (not clipped by the viewport bottom)
+     and span the trigger's width so it cannot spill past the sidebar's edge. */
+  bottom: calc(100% + 0.5rem);
+  left: 0;
   right: 0;
-  min-width: 160px;
   background: white;
   border: 1px solid #e2e8f0;
   border-radius: 10px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-md);
   z-index: 1000;
   overflow: hidden;
+}
+
+/* Rail mode: open to the right of the sidebar (past its padding) instead of spanning the 64px rail */
+.collapsed .dropdown-menu {
+  left: calc(100% + var(--space-3) + var(--space-2));
+  right: auto;
+  bottom: 0;
+  min-width: 160px;
 }
 
 .dropdown-item {
