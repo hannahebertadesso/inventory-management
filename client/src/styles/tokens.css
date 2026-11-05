@@ -1,0 +1,75 @@
+/* Design tokens. One scale per concern; use these instead of ad hoc values. */
+:root {
+  /* Spacing: 4px base */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+
+  /* Neutrals (slate) */
+  --color-bg: #f8fafc;
+  --color-surface: #ffffff;
+  --color-surface-muted: #f1f5f9;
+  --color-border: #e2e8f0;
+  --color-border-strong: #cbd5e1;
+  --color-text: #0f172a;
+  --color-text-body: #334155;
+  --color-text-muted: #64748b;
+  --color-text-subtle: #94a3b8;
+
+  /* Sidebar (light) */
+  --sidebar-width: 248px;
+  --sidebar-width-collapsed: 64px;
+  --sidebar-transition: 200ms ease;
+  --sidebar-bg: var(--color-surface);
+  --sidebar-border: var(--color-border);
+  --sidebar-text: var(--color-text-muted);
+  --sidebar-text-active: #2563eb;
+  --sidebar-item-hover: var(--color-surface-muted);
+  --sidebar-item-active: var(--color-accent-soft);
+
+  /* Accent */
+  --color-accent: #2563eb;
+  --color-accent-hover: #1d4ed8;
+  --color-accent-soft: #eff6ff;
+
+  /* Status: soft bg paired with strong text */
+  --color-success: #059669;  --color-success-soft: #d1fae5;  --color-success-text: #065f46;
+  --color-info:    #2563eb;  --color-info-soft:    #dbeafe;  --color-info-text:    #1e40af;
+  --color-warning: #ea580c;  --color-warning-soft: #fed7aa;  --color-warning-text: #92400e;
+  --color-danger:  #dc2626;  --color-danger-soft:  #fecaca;  --color-danger-text:  #991b1b;
+  --color-neutral-soft: #e0e7ff; --color-neutral-text: #3730a3;
+
+  /* Radius */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-full: 999px;
+
+  /* Shadow */
+  --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.06);
+  --shadow-md: 0 4px 12px rgba(15, 23, 42, 0.08);
+  --shadow-lg: 0 12px 32px rgba(15, 23, 42, 0.16);
+
+  /* Type (system stack; no webfont loaded) */
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  --text-xs: 12px;
+  --text-sm: 13px;
+  --text-base: 14px;
+  --text-lg: 16px;
+  --text-xl: 20px;
+  --text-2xl: 24px;
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+
+  --transition: 150ms ease;
+
+  /* Stacking: content < filter bar < sidebar drawer < modals (modals use 1000/2000) */
+  --z-filters: 20;
+  --z-backdrop: 50;
+  --z-sidebar: 60;
+}

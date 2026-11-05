@@ -1,7 +1,11 @@
 <template>
-  <div class="profile-menu">
+  <div class="profile-menu" :class="{ collapsed }">
     <button
       class="profile-button"
+      :aria-label="collapsed ? currentUser.name : undefined"
+      :title="collapsed ? currentUser.name : undefined"
+      aria-haspopup="menu"
+      :aria-expanded="isDropdownOpen ? 'true' : 'false'"
       @click="toggleDropdown"
       @blur="handleBlur"
     >
@@ -81,6 +85,11 @@ import { useI18n } from '../composables/useI18n'
 const { currentUser, logout, getInitials } = useAuth()
 const { t } = useI18n()
 
+// Rail mode: show only the avatar and open the dropdown beside the sidebar
+defineProps({
+  collapsed: { type: Boolean, default: false }
+})
+
 const isDropdownOpen = ref(false)
 const emit = defineEmits(['show-profile-details', 'show-tasks'])
 
@@ -121,6 +130,7 @@ const handleLogout = () => {
 }
 
 .profile-button {
+  width: 100%;
   display: flex;
   align-items: center;
   gap: 0.625rem;
@@ -138,6 +148,23 @@ const handleLogout = () => {
   border-color: #cbd5e1;
 }
 
+/* Rail mode: avatar-only trigger */
+.collapsed .profile-button {
+  width: auto;
+  padding: 0.25rem;
+  border-radius: 50%;
+}
+
+.collapsed .profile-name,
+.collapsed .chevron {
+  display: none;
+}
+
+.profile-button:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
 .avatar {
   width: 32px;
   height: 32px;
@@ -153,6 +180,13 @@ const handleLogout = () => {
 }
 
 .profile-name {
+  /* Fill the full-width trigger; truncate long names instead of widening the sidebar. */
+  flex: 1;
+  min-width: 0;
+  text-align: left;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   font-size: 0.875rem;
   font-weight: 500;
   color: #0f172a;
@@ -169,15 +203,27 @@ const handleLogout = () => {
 
 .dropdown-menu {
   position: absolute;
-  top: calc(100% + 0.5rem);
+  /* Lives in the sidebar footer: open upward (not clipped by the viewport bottom)
+     and span the trigger's width so it cannot spill past the sidebar's edge. */
+  bottom: calc(100% + 0.5rem);
+  left: 0;
   right: 0;
-  min-width: 280px;
   background: white;
   border: 1px solid #e2e8f0;
   border-radius: 10px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-md);
   z-index: 1000;
   overflow: hidden;
+}
+
+/* Rail mode: the 64px rail is too narrow for a full-width menu, so open to the right of the
+   sidebar, bottom-aligned with the trigger. The offset skips the sidebar's own horizontal
+   padding (space-3) plus a gap. Safe from clipping: no ancestor sets overflow. */
+.collapsed .dropdown-menu {
+  left: calc(100% + var(--space-3) + var(--space-2));
+  right: auto;
+  bottom: 0;
+  min-width: 240px;
 }
 
 .dropdown-header {
