@@ -102,5 +102,14 @@ export const api = {
   async getPurchaseOrderByBacklogItem(backlogItemId) {
     const response = await axios.get(`${API_BASE_URL}/purchase-orders/${backlogItemId}`)
     return response.data
+  },
+
+  async getLowStockItems(threshold = 10, warehouse) {
+    const params = { threshold }
+    if (warehouse) {
+      params.warehouse = warehouse
+    }
+    const response = await axios.get(`${API_BASE_URL}/inventory`, { params })
+    return response.data.filter(item => item.quantity < threshold)
   }
 }
